@@ -3,6 +3,7 @@ import Section from "./Section/Section";
 import ContactForm from "./ContactForm/ContactForm ";
 import ContactList from "./ContactList/ContactList ";
 import Filter from "./Filter/Filter";
+import helper from "../helpers/localStorageHelper";
 
 import { toast, Zoom } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
@@ -59,17 +60,16 @@ class App extends Component {
   };
 
   componentDidMount() {
-    const contactsFromLS = JSON.parse(localStorage.getItem("contacts"));
-    if (contactsFromLS) {
+    if (helper.get("contacts")) {
       this.setState({
-        contacts: [...contactsFromLS],
+        contacts: [...helper.get("contacts")],
       });
     }
   }
 
   componentDidUpdate(prevProps, prevState) {
     if (prevState.contacts !== this.state.contacts) {
-      localStorage.setItem("contacts", JSON.stringify(this.state.contacts));
+      helper.save("contacts", this.state.contacts);
     }
   }
 
