@@ -3,10 +3,12 @@ import Section from "./Section/Section";
 import ContactForm from "./ContactForm/ContactForm ";
 import ContactList from "./ContactList/ContactList ";
 import Filter from "./Filter/Filter";
-import helper from "../helpers/localStorageHelper";
+import storage from "../helpers/localStorageHelper";
 
-import { toast, Zoom } from "react-toastify";
+import { toast } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
+
+const { save, get } = storage;
 
 class App extends Component {
   state = {
@@ -37,12 +39,7 @@ class App extends Component {
     );
     if (names.includes(newName.toLowerCase().trim())) {
       toast.configure();
-      toast.error(`${newName} is already in contact list`, {
-        position: toast.POSITION.TOP_CENTER,
-        autoClose: 6000,
-        delay: 200,
-        transition: Zoom,
-      });
+      toast.error(`${newName} is already in contact list`);
     } else {
       this.setState((state) => ({
         contacts: [...state.contacts, contact],
@@ -60,16 +57,16 @@ class App extends Component {
   };
 
   componentDidMount() {
-    if (helper.get("contacts")) {
+    if (get("contacts")) {
       this.setState({
-        contacts: [...helper.get("contacts")],
+        contacts: [...get("contacts")],
       });
     }
   }
 
   componentDidUpdate(prevProps, prevState) {
     if (prevState.contacts !== this.state.contacts) {
-      helper.save("contacts", this.state.contacts);
+      save("contacts", this.state.contacts);
     }
   }
 
